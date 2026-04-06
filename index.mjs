@@ -7,10 +7,7 @@ app.set('views', './views');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
-const WEATHER_API_KEY = 'b6907d289e10d714a6e88b30761fae22'; // Open-Meteo is free, no key needed
-// We use Open-Meteo (free, no key) + geocoding API (free, no key)
-
-// Route 1: Home page - shows a random country info from countries-list package
+const WEATHER_API_KEY = 'b6907d289e10d714a6e88b30761fae22'; 
 app.get('/', (req, res) => {
     const codes = Object.keys(countries);
     const randomCode = codes[Math.floor(Math.random() * codes.length)];
@@ -22,7 +19,6 @@ app.get('/', (req, res) => {
 app.get('/country', (req, res) => {
     const code = req.query.code;
     if (!code) {
-        // Show the form with all countries listed
         res.render('country', { country: null, code: null, countries });
     } else {
         const country = countries[code];
@@ -38,7 +34,6 @@ app.get('/weather', (req, res) => {
 app.post('/weather', async (req, res) => {
     const city = req.body.city;
     try {
-        // Step 1: geocode the city (free API, no key needed)
         const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
         const geoData = await geoRes.json();
 
@@ -48,7 +43,6 @@ app.post('/weather', async (req, res) => {
 
         const { latitude, longitude, name, country } = geoData.results[0];
 
-        // Step 2: get current weather
         const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&hourly=relative_humidity_2m,wind_speed_10m`);
         const weatherJson = await weatherRes.json();
         const w = weatherJson.current_weather;
@@ -81,7 +75,7 @@ app.get('/countries', (req, res) => {
     res.render('countries', { countries: filtered, continent, continentNames });
 });
 
-// Helper: weather code to description
+// weather code to description
 function getWeatherDesc(code) {
     if (code === 0) return 'Clear sky';
     if (code <= 3) return 'Partly cloudy';
