@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW3: Country Info</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <h1 class="site-header">🌍 World Explorer</h1>
+    <%- include('partials/navbar') %>
+
+    <main class="container mt-4">
+        <h2 class="page-title">Country Information</h2>
+        <p>Select a country from the list to learn more about it.</p>
+
+        <!-- Form with dropdown - user input -->
+        <form method="GET" action="/country" class="mb-4">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-6">
+                    <label for="code" class="form-label">Choose a country:</label>
+                    <select name="code" id="code" class="form-select">
+                        <option value="">-- Select a country --</option>
+                        <% Object.entries(countries).sort((a,b) => a[1].name.localeCompare(b[1].name)).forEach(([c, info]) => { %>
+                            <option value="<%= c %>" <%= code === c ? 'selected' : '' %>><%= info.name %> (<%= c %>)</option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <% if (country) { %>
+        <div class="card country-card">
+            <div class="card-body row">
+                <div class="col-md-8">
+                    <h3><strong><%= country.name %></strong> &nbsp; <span class="text-muted">(<%= code %>)</span></h3>
+                    <hr>
+                    <p><strong>🏙️ Capital:</strong> <%= country.capital %></p>
+                    <p><strong>🌐 Continent:</strong> <%= country.continent %></p>
+                    <p><strong>💰 Currency:</strong> <%= country.currency.join(', ') %></p>
+                    <p><strong>📞 Phone Code:</strong> +<%= country.phone.join(', +') %></p>
+                    <p><strong>🗣️ Languages:</strong> <%= country.languages.join(', ') %></p>
+                    <p><strong>📝 Native Name:</strong> <%= country.native %></p>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </main>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

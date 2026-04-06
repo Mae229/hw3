@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW3: Weather</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <h1 class="site-header">🌍 World Explorer</h1>
+    <%- include('partials/navbar') %>
+
+    <main class="container mt-4">
+        <h2 class="page-title">🌤️ Weather Lookup</h2>
+        <p>Enter a city name to get current weather conditions.</p>
+
+        <!-- Form with text input - user input -->
+        <form method="POST" action="/weather" class="mb-4">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-6">
+                    <label for="city" class="form-label">City name:</label>
+                    <input type="text" name="city" id="city" class="form-control" placeholder="e.g. Paris, Tokyo, New York" value="<%= city || '' %>">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success w-100">Get Weather</button>
+                </div>
+            </div>
+        </form>
+
+        <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <% if (weatherData) { %>
+        <div class="card weather-card">
+            <div class="card-body text-center">
+                <div class="weather-emoji"><%= weatherData.emoji %></div>
+                <h3><%= weatherData.city %>, <%= weatherData.country %></h3>
+                <h4 class="weather-temp"><%= weatherData.temp %>°C</h4>
+                <p class="weather-desc"><%= weatherData.description %></p>
+                <hr>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <p><strong>💨 Wind Speed</strong></p>
+                        <p><%= weatherData.windspeed %> km/h</p>
+                    </div>
+                    <div class="col-6">
+                        <p><strong>🌡️ Condition Code</strong></p>
+                        <p><%= weatherData.weathercode %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </main>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

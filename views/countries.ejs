@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW3: All Countries</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <h1 class="site-header">🌍 World Explorer</h1>
+    <%- include('partials/navbar') %>
+
+    <main class="container mt-4">
+        <h2 class="page-title">All Countries</h2>
+
+        <!-- Filter by continent using radio buttons -->
+        <form method="GET" action="/countries" class="mb-4">
+            <label class="form-label"><strong>Filter by continent:</strong></label>
+            <div class="d-flex flex-wrap gap-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="continent" value="all" id="all" <%= continent === 'all' ? 'checked' : '' %> onchange="this.form.submit()">
+                    <label class="form-check-label" for="all">All</label>
+                </div>
+                <% Object.entries(continentNames).forEach(([code, name]) => { %>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="continent" value="<%= code %>" id="<%= code %>" <%= continent === code ? 'checked' : '' %> onchange="this.form.submit()">
+                    <label class="form-check-label" for="<%= code %>"><%= name %></label>
+                </div>
+                <% }) %>
+            </div>
+        </form>
+
+        <p class="text-muted">Showing <strong><%= countries.length %></strong> countries.</p>
+
+        <table class="table table-striped table-hover countries-table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Code</th>
+                    <th>Country</th>
+                    <th>Capital</th>
+                    <th>Continent</th>
+                    <th>Currency</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% countries.forEach(([code, c]) => { %>
+                <tr>
+                    <td><strong><%= code %></strong></td>
+                    <td><%= c.name %></td>
+                    <td><%= c.capital %></td>
+                    <td><%= continentNames[c.continent] || c.continent %></td>
+                    <td><%= c.currency.join(', ') %></td>
+                    <td><a href="/country?code=<%= code %>" class="btn btn-sm btn-outline-primary">View</a></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </main>
+
+    <%- include('partials/footer') %>
+</body>
+</html>
